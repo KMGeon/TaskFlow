@@ -168,6 +168,105 @@ $ pnpm task init
 
 ---
 
+## Usage Recipes
+
+TaskFlow skills can be combined for powerful workflows. Here are the most effective patterns.
+
+### Full Autopilot: PRD to Implementation
+
+Go from zero to working code — fully autonomous.
+
+```bash
+# Step 1: Generate PRD interactively
+/prd
+
+# Step 2: Create implementation plan
+/trd
+
+# Step 3: Decompose into tasks
+/parse-prd
+
+# Step 4: Let Claude implement everything automatically
+/ra /auto
+```
+
+Claude will pick up tasks one by one (by priority & dependency order), implement each one, mark it done, and move to the next — until all tasks are complete.
+
+### Manual Control: One Task at a Time
+
+For when you want to review each step.
+
+```bash
+# See what to work on next
+/next
+
+# Claude implements the selected task
+# ... (review the changes)
+
+# Check overall progress
+/task-status
+```
+
+### Requirement Changes Mid-Project
+
+Requirements changed? No need to start over.
+
+```bash
+# Analyze what's affected
+/refine
+
+# Then continue with updated tasks
+/ra /auto
+```
+
+### Break Down a Complex Task
+
+When a single task is too big:
+
+```bash
+# Decompose into smaller subtasks
+/brainstorm
+
+# Then auto-implement the subtasks
+/ra /auto
+```
+
+### Combine with Ralph Loop
+
+[Ralph Loop](https://github.com/anthropics/claude-code) (`/ra`) repeats any skill or prompt on a loop. Combine it with TaskFlow skills:
+
+```bash
+# Auto-implement all tasks
+/ra /auto
+
+# Auto-implement with a custom instruction
+/ra "get the next task, implement it, run tests, and mark done"
+
+# Run with max iterations
+/ra /auto --max-iterations 20
+```
+
+### Recommended Workflow
+
+```
+┌─────────────┐    ┌─────────────┐    ┌──────────────┐
+│   /prd      │───▶│   /trd      │───▶│  /parse-prd  │
+│ (Define)    │    │ (Plan)      │    │ (Decompose)  │
+└─────────────┘    └─────────────┘    └──────┬───────┘
+                                             │
+                   ┌─────────────┐    ┌──────▼───────┐
+                   │  /refine    │◀───│  /ra /auto   │
+                   │ (if needed) │───▶│ (Implement)  │
+                   └─────────────┘    └──────┬───────┘
+                                             │
+                                      ┌──────▼───────┐
+                                      │ /task-status  │
+                                      │ (Review)      │
+                                      └──────────────┘
+```
+
+---
+
 ## Roadmap
 
 - [x] CLI core commands (init, list, show, set-status, tree)
