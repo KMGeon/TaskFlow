@@ -81,6 +81,7 @@ export async function runPrdBrainstorm(
 export interface TaskCreateOptions {
   projectRoot: string;
   projectContext?: string;
+  onFirstMessage?: () => void;
 }
 
 export interface TaskCreateResult {
@@ -176,6 +177,7 @@ export async function runTaskCreate(
   const prompt = `새로운 기능을 만들려고 합니다. 대화를 통해 요구사항을 정의하고, TRD를 작성한 뒤, 태스크로 분해해주세요.${contextSection}`;
 
   let lastText = "";
+  let firstMessageFired = false;
 
   const conversation = query({
     prompt,
@@ -190,6 +192,10 @@ export async function runTaskCreate(
   });
 
   for await (const message of conversation) {
+    if (!firstMessageFired && message.type === "assistant") {
+      firstMessageFired = true;
+      options.onFirstMessage?.();
+    }
     if (message.type === "assistant") {
       const betaMessage = (message as Extract<SDKMessage, { type: "assistant" }>).message;
       if (betaMessage?.content) {

@@ -35,12 +35,16 @@ export function registerCreateCommand(program: Command) {
           scanSpinner.warn("코드베이스 분석 스킵");
         }
 
-        console.log(chalk.cyan("\n💬 대화를 시작합니다...\n"));
+        const aiSpinner = ora("Claude 세션 시작 중...").start();
 
         try {
           const result = await runTaskCreate({
             projectRoot: cwd,
             projectContext,
+            onFirstMessage: () => {
+              aiSpinner.succeed("Claude 연결 완료");
+              console.log(chalk.cyan("\n💬 대화를 시작합니다...\n"));
+            },
           });
 
           if (result) {
