@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 import chalk from "chalk";
 import ora from "ora";
+import inquirer from "inquirer";
 import { withCliErrorBoundary } from "../lib/error-boundary.js";
 import { runTaskCreate } from "../../core/ai/claude-client.js";
 import { scanFiles, sampleFiles } from "../../core/prd/scanner.js";
@@ -14,36 +15,50 @@ export function registerCreateCommand(program: Command) {
         const cwd = process.cwd();
 
         console.log(chalk.bold("\n🚀 새 기능을 만들어봅시다!\n"));
-        console.log(chalk.gray("  Claude와 대화하며 요구사항을 정의하고,"));
-        console.log(chalk.gray("  TRD를 작성한 뒤, 태스크로 분해합니다.\n"));
 
-        // Scan codebase for context
-        const scanSpinner = ora("코드베이스 분석 중...").start();
-        let projectContext = "";
-        try {
-          const files = await scanFiles(cwd);
-          if (files.length > 0) {
-            const samples = await sampleFiles(files, cwd);
-            projectContext = JSON.stringify(
-              { files, samples: samples.slice(0, 20) },
-              null,
-              2,
-            );
+        // Step 1: 사용자 요약 입력 + 백그라운드 코드베이스 스캔 (병렬)
+        const scanPromise = (async () => {
+          try {
+            const files = await scanFiles(cwd);
+            if (files.length > 0) {
+              const samples = await sampleFiles(files, cwd);
+              return JSON.stringify(
+                { files, samples: samples.slice(0, 20) },
+                null,
+                2,
+              );
+            }
+          } catch {
+            // 스캔 실패해도 계속 진행
           }
-          scanSpinner.succeed(`코드베이스 분석 완료 (${files.length}개 파일)`);
-        } catch {
-          scanSpinner.warn("코드베이스 분석 스킵");
+          return "";
+        })();
+
+        const { summary } = await inquirer.prompt<{ summary: string }>([
+          {
+            type: "editor",
+            name: "summary",
+            message: "만들고 싶은 기능을 설명해주세요 (에디터가 열립니다):",
+          },
+        ]);
+
+        if (!summary.trim()) {
+          console.log(chalk.yellow("\n⚠ 기능 설명이 비어있습니다.\n"));
+          return;
         }
 
-        const aiSpinner = ora("Claude 세션 시작 중...").start();
+        // Step 2: 스캔 결과 대기 + Claude 연결
+        const projectContext = await scanPromise;
+        const aiSpinner = ora("Claude와 연결 중...").start();
 
         try {
           const result = await runTaskCreate({
             projectRoot: cwd,
             projectContext,
+            userSummary: summary,
             onFirstMessage: () => {
               aiSpinner.succeed("Claude 연결 완료");
-              console.log(chalk.cyan("\n💬 대화를 시작합니다...\n"));
+              console.log(chalk.cyan("\n💬 추가 질문을 드릴게요...\n"));
             },
           });
 

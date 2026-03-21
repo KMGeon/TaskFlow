@@ -80,6 +80,7 @@ export async function runPrdBrainstorm(
 export interface TaskCreateOptions {
   projectRoot: string;
   projectContext?: string;
+  userSummary: string;
   onFirstMessage?: () => void;
 }
 
@@ -173,7 +174,13 @@ export async function runTaskCreate(
     ? `\n\n## 현재 프로젝트 컨텍스트\n\n${options.projectContext}`
     : "";
 
-  const prompt = `새로운 기능을 만들려고 합니다. 대화를 통해 요구사항을 정의하고, TRD를 작성한 뒤, 태스크로 분해해주세요.${contextSection}`;
+  const prompt = `새로운 기능을 만들려고 합니다. 사용자가 다음과 같이 요약했습니다:
+
+---
+${options.userSummary}
+---
+
+이 요약을 바탕으로 추가 질문을 하며 요구사항을 구체화하고, TRD를 작성한 뒤, 태스크로 분해해주세요.${contextSection}`;
 
   let lastText = "";
   let firstMessageFired = false;
