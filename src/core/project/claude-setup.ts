@@ -38,36 +38,50 @@ export async function generateClaudeMd(
 - \`create_task\` — 새 태스크 생성
 - \`update_task\` — 태스크 수정
 - \`delete_task\` — 태스크 삭제
-- \`set_task_status\` — 상태 변경 (pending → in-progress → done)
+- \`set_task_status\` — 상태 변경
 - \`get_next_task\` — 의존성/우선순위 기반 다음 태스크 추천
+- \`expand_subtasks\` — 서브태스크 파일 생성
 
-### PRD & 분석
-- \`generate_prd\` — PRD 생성
-- \`brainstorm_prd\` — AI 브레인스토밍 멀티턴 대화로 PRD 생성
-- \`auto_analyze_prd\` — 코드베이스 스캔 → PRD 자동 생성
-- \`generate_feature_prd\` — 기능별 PRD 생성
-- \`parse_prd\` — PRD를 태스크로 분해
+### PRD & 코드베이스
+- \`scan_codebase\` — 코드베이스 파일 목록/시그니처 스캔
+- \`save_prd\` — PRD 마크다운 저장
+- \`read_prd\` — PRD 읽기
 
-### 브레인스토밍 & 분석
-- \`brainstorm_task\` — 태스크를 서브태스크로 분해
-- \`expand_subtasks\` — 분해 결과를 파일로 생성
-- \`refine_tasks\` — 요구사항 변경 시 영향도 분석
+### 프로젝트
+- \`initialize_project\` — 프로젝트 초기화
 - \`generate_claude_md\` — CLAUDE.md 재생성
+
+## Claude Code 스킬
+
+다음 스킬 커맨드를 사용하여 워크플로우를 실행할 수 있습니다:
+- \`/prd\` — PRD 대화형 생성
+- \`/trd\` — PRD 기반 TRD 생성
+- \`/parse-prd\` — PRD → 태스크 분해
+- \`/brainstorm\` — 태스크 서브태스크 분해
+- \`/refine\` — 요구사항 변경 영향 분석
+- \`/next\` — 다음 작업할 태스크 추천
+- \`/task-status\` — 진행 상황 요약
 
 ## 워크플로우
 
 ### 새 기능 구현 시
-1. \`get_next_task\`로 다음 태스크 확인
+1. \`/next\`로 다음 태스크 확인
 2. \`set_task_status\` → in-progress
 3. 구현 완료 후 \`set_task_status\` → done
 
+### PRD → 태스크 생성
+1. \`/prd\`로 PRD 대화형 생성
+2. \`/trd\`로 구현 계획 작성
+3. \`/parse-prd\`로 태스크 분해
+
 ### 요구사항 변경 시
-1. \`refine_tasks\`로 영향 받는 태스크 분석
+1. \`/refine\`으로 영향 받는 태스크 분석
 2. 영향 받는 태스크 확인 및 수정
 
 ## 파일 구조
 - \`.taskflow/config.json\` — 프로젝트 설정
 - \`.taskflow/prd.md\` — PRD 문서
+- \`.taskflow/trd.md\` — TRD 문서
 - \`.taskflow/tasks/task-{NNN}.md\` — 개별 태스크 파일
 `;
 

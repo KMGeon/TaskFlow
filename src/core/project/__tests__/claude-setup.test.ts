@@ -32,6 +32,25 @@ describe("generateClaudeMd", () => {
     expect(content).toContain("A test project");
     expect(content).toContain("TypeScript");
     expect(content).toContain("list_tasks");
+    // new MCP tools
+    expect(content).toContain("scan_codebase");
+    expect(content).toContain("save_prd");
+    expect(content).toContain("read_prd");
+    // old tools should not be present
+    expect(content).not.toContain("brainstorm_prd");
+    expect(content).not.toContain("auto_analyze_prd");
+    expect(content).not.toContain("parse_prd");
+    expect(content).not.toContain("brainstorm_task");
+    expect(content).not.toContain("refine_tasks");
+    expect(content).not.toContain("generate_feature_prd");
+    // skill commands
+    expect(content).toContain("/prd");
+    expect(content).toContain("/trd");
+    expect(content).toContain("/brainstorm");
+    expect(content).toContain("/refine");
+    expect(content).toContain("/parse-prd");
+    expect(content).toContain("/next");
+    expect(content).toContain("/task-status");
   });
 });
 
