@@ -1,47 +1,47 @@
-# PRD 생성
+# PRD Creation
 
-사용자와 대화하며 PRD(Product Requirements Document)를 작성합니다.
+Create a PRD (Product Requirements Document) through interactive conversation with the user.
 
-## 사용 가능한 MCP 도구
-- `mcp__taskflow__scan_codebase` — 코드베이스 파일 목록/시그니처 스캔
-- `mcp__taskflow__save_prd` — PRD를 .taskflow/prd.md에 저장
+## Available MCP Tools
+- `mcp__taskflow__scan_codebase` — Scan codebase file list/signatures
+- `mcp__taskflow__save_prd` — Save PRD to .taskflow/prd.md
 
-## 워크플로우
+## Workflow
 
-1. 먼저 `mcp__taskflow__scan_codebase`로 현재 프로젝트 상태를 파악합니다.
-2. 사용자에게 **한 번에 하나씩** 질문하며 요구사항을 수집합니다:
-   - 프로젝트명, 한 줄 요약
-   - 타겟 사용자
-   - 해결하려는 문제 (Pain Points)와 해결 방안
-   - 목표 및 핵심 지표 (KPI)
-   - 주요 사용 시나리오
-   - 필수 기능 (Must-Have)과 선택 기능 (Nice-to-Have)
-   - 비기능 요구사항 (성능, 보안 등)
-   - 기술 스택
-   - 범위 (포함/제외)
-   - 마일스톤
-   - 리스크 및 완화 전략
-3. 충분한 정보가 모이면 PRD 마크다운을 작성합니다.
-4. 사용자에게 최종 확인을 받은 후 `mcp__taskflow__save_prd`로 저장합니다.
+1. First, scan the current project state with `mcp__taskflow__scan_codebase`.
+2. Collect requirements by asking the user **one question at a time**:
+   - Project name, one-line summary
+   - Target users
+   - Problems to solve (Pain Points) and solutions
+   - Goals and key metrics (KPIs)
+   - Main usage scenarios
+   - Must-Have features and Nice-to-Have features
+   - Non-functional requirements (performance, security, etc.)
+   - Tech stack
+   - Scope (in/out)
+   - Milestones
+   - Risks and mitigation strategies
+3. Once sufficient information is gathered, write the PRD in markdown format.
+4. After final confirmation from the user, save it with `mcp__taskflow__save_prd`.
 
-## PRD 형식
+## PRD Format
 
-다음 11개 섹션을 포함하는 마크다운으로 작성합니다:
+Write in markdown including the following 11 sections:
 
-1. 제품 개요
-2. 타겟 사용자
-3. 해결하려는 문제 및 솔루션 (표)
-4. 목표 및 핵심 지표
-5. 주요 사용 시나리오
-6. 기능 요구사항 (표: #, 기능, 우선순위)
-7. 비기능 요구사항
-8. 기술 스택
-9. 범위 (포함/제외)
-10. 마일스톤
-11. 리스크 및 완화 전략
+1. Product Overview
+2. Target Users
+3. Problems & Solutions (table)
+4. Goals & Key Metrics
+5. Main Usage Scenarios
+6. Functional Requirements (table: #, Feature, Priority)
+7. Non-Functional Requirements
+8. Tech Stack
+9. Scope (In/Out)
+10. Milestones
+11. Risks & Mitigation Strategies
 
-## 규칙
-- 한국어로 작성합니다.
-- 한 번에 하나의 질문만 합니다.
-- 가능하면 객관식으로 제시합니다.
-- 사용자의 답변이 모호하면 구체적으로 되물어봅니다.
+## Rules
+- Ask only one question at a time.
+- Present multiple-choice options when possible.
+- If the user's answer is vague, ask for clarification.
+- Always respond to the user in Korean.

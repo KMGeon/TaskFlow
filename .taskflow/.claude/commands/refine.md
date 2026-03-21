@@ -1,35 +1,35 @@
-# 요구사항 변경 분석
+# Requirement Change Analysis
 
-요구사항 변경이 기존 태스크에 미치는 영향을 분석하고 업데이트합니다.
+Analyze the impact of requirement changes on existing tasks and update them.
 
-## 사용 가능한 MCP 도구
-- `mcp__taskflow__read_prd` — 현재 PRD 읽기
-- `mcp__taskflow__list_tasks` — 전체 태스크 조회
-- `mcp__taskflow__read_task` — 개별 태스크 읽기
-- `mcp__taskflow__update_task` — 태스크 수정
-- `mcp__taskflow__create_task` — 새 태스크 생성
-- `mcp__taskflow__delete_task` — 불필요한 태스크 삭제
-- `mcp__taskflow__save_prd` — PRD 업데이트
+## Available MCP Tools
+- `mcp__taskflow__read_prd` — Read current PRD
+- `mcp__taskflow__list_tasks` — List all tasks
+- `mcp__taskflow__read_task` — Read individual task
+- `mcp__taskflow__update_task` — Update a task
+- `mcp__taskflow__create_task` — Create a new task
+- `mcp__taskflow__delete_task` — Delete an unnecessary task
+- `mcp__taskflow__save_prd` — Update PRD
 
-## 워크플로우
+## Workflow
 
-1. 사용자에게 변경사항을 확인합니다:
-   - 어떤 요구사항이 바뀌었는지 설명을 듣거나
-   - 변경된 파일/diff를 확인합니다
-2. `mcp__taskflow__read_prd`로 현재 PRD를 읽습니다.
-3. `mcp__taskflow__list_tasks`로 전체 태스크를 조회합니다.
-4. 변경사항이 영향을 미치는 태스크를 식별합니다:
-   - 수정이 필요한 태스크
-   - 새로 추가해야 할 태스크
-   - 더 이상 필요 없는 태스크
-5. 영향 분석 결과를 사용자에게 표로 보여줍니다.
-6. 사용자 승인 후:
-   - `mcp__taskflow__update_task`로 수정
-   - `mcp__taskflow__create_task`로 추가
-   - `mcp__taskflow__delete_task`로 삭제
-7. 필요시 `mcp__taskflow__save_prd`로 PRD도 업데이트합니다.
+1. Confirm the changes with the user:
+   - Listen to an explanation of what requirements changed, or
+   - Review changed files/diffs
+2. Read the current PRD with `mcp__taskflow__read_prd`.
+3. List all tasks with `mcp__taskflow__list_tasks`.
+4. Identify tasks affected by the changes:
+   - Tasks that need modification
+   - Tasks that need to be added
+   - Tasks that are no longer needed
+5. Show the impact analysis results to the user in a table.
+6. After user approval:
+   - Update with `mcp__taskflow__update_task`
+   - Add with `mcp__taskflow__create_task`
+   - Delete with `mcp__taskflow__delete_task`
+7. If needed, update the PRD with `mcp__taskflow__save_prd`.
 
-## 규칙
-- 한국어로 작성합니다.
-- 변경 전/후를 명확히 대비하여 보여줍니다.
-- 반드시 사용자 승인 후 수정합니다.
+## Rules
+- Clearly show before/after comparison of changes.
+- Always get user approval before making modifications.
+- Always respond to the user in Korean.

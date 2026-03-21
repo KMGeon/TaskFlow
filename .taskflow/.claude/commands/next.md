@@ -1,21 +1,21 @@
-# 다음 태스크 추천
+# Next Task Recommendation
 
-의존성과 우선순위를 기반으로 다음 작업할 태스크를 추천합니다.
+Recommend the next task to work on based on dependencies and priority.
 
-## 사용 가능한 MCP 도구
-- `mcp__taskflow__get_next_task` — 추천 태스크 조회
-- `mcp__taskflow__read_task` — 태스크 상세 읽기
-- `mcp__taskflow__set_task_status` — 태스크 상태 변경
+## Available MCP Tools
+- `mcp__taskflow__get_next_task` — Get recommended tasks
+- `mcp__taskflow__read_task` — Read task details
+- `mcp__taskflow__set_task_status` — Change task status
 
-## 워크플로우
+## Workflow
 
-1. `mcp__taskflow__get_next_task`로 추천 태스크 목록을 조회합니다.
-2. 각 추천 태스크에 대해:
-   - `mcp__taskflow__read_task`로 상세 정보를 읽습니다.
-   - 추천 이유를 설명합니다 (의존성 해소됨, 높은 우선순위 등).
-3. 사용자가 태스크를 선택하면 `mcp__taskflow__set_task_status`로 상태를 `in-progress`로 변경합니다.
+1. Get recommended tasks with `mcp__taskflow__get_next_task`.
+2. For each recommended task:
+   - Read details with `mcp__taskflow__read_task`.
+   - Explain the recommendation reason (dependencies resolved, high priority, etc.).
+3. When the user selects a task, change its status to `in-progress` with `mcp__taskflow__set_task_status`.
 
-## 규칙
-- 한국어로 응답합니다.
-- 추천 목록은 최대 3개까지 보여줍니다.
-- 각 추천에 이유를 명확히 설명합니다.
+## Rules
+- Show a maximum of 3 recommendations.
+- Clearly explain the reason for each recommendation.
+- Always respond to the user in Korean.

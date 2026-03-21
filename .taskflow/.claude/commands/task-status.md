@@ -1,21 +1,21 @@
-# 프로젝트 진행 상황
+# Project Progress Summary
 
-현재 프로젝트의 태스크 진행 상황을 요약합니다.
+Summarize the current project's task progress.
 
-## 사용 가능한 MCP 도구
-- `mcp__taskflow__list_tasks` — 전체 태스크 조회
+## Available MCP Tools
+- `mcp__taskflow__list_tasks` — List all tasks
 
-## 워크플로우
+## Workflow
 
-1. `mcp__taskflow__list_tasks`로 전체 태스크를 조회합니다.
-2. 다음을 요약하여 보여줍니다:
-   - 상태별 태스크 수 (Todo / In-Progress / Blocked / Done)
-   - 전체 완료율 (%)
-   - 현재 진행 중인 태스크
-   - 블로커가 있는 태스크
-   - 의존성이 해소되어 시작 가능한 태스크
-3. 주요 이슈나 지연된 태스크가 있으면 하이라이트합니다.
+1. List all tasks with `mcp__taskflow__list_tasks`.
+2. Show a summary including:
+   - Task count by status (Todo / In-Progress / Blocked / Done)
+   - Overall completion rate (%)
+   - Currently in-progress tasks
+   - Blocked tasks
+   - Tasks ready to start (dependencies resolved)
+3. Highlight any major issues or delayed tasks.
 
-## 규칙
-- 한국어로 응답합니다.
-- 간결한 표 형식으로 요약합니다.
+## Rules
+- Summarize in a concise table format.
+- Always respond to the user in Korean.
