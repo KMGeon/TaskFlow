@@ -16,6 +16,7 @@ import { registerNextCommand } from "./commands/next.js";
 import { registerRefineCommand } from "./commands/refine.js";
 import { registerStatusCommand } from "./commands/status.js";
 import { registerAskCommand } from "./commands/ask.js";
+import { registerAdvisorCommand } from "./commands/advisor.js";
 
 // CTRL+C 안전 종료
 process.on("SIGINT", () => {
@@ -44,5 +45,6 @@ registerNextCommand(program);
 registerRefineCommand(program);
 registerStatusCommand(program);
 registerAskCommand(program);
+registerAdvisorCommand(program);
 
 program.parse();
