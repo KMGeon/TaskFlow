@@ -7,6 +7,7 @@ import { withCliErrorBoundary } from "../lib/error-boundary.js";
 import { initProject } from "../../core/project/init.js";
 import { readConfig } from "../../core/project/config.js";
 import { generateClaudeMd, generateMcpJson, appendClaudeImport } from "../../core/project/claude-setup.js";
+import { installSkills } from "../../core/project/skill-setup.js";
 
 export function registerInitCommand(program: Command) {
   program
@@ -49,6 +50,11 @@ async function handleNewInit(cwd: string): Promise<void> {
   // Step 4: Append import to root CLAUDE.md
   await appendClaudeImport(cwd);
   console.log(chalk.green("✔ 루트 CLAUDE.md에 TaskFlow import 추가 완료"));
+
+  // Step 5: Install skills + symlinks
+  const skillSpinner = ora("Claude Code 스킬 설치 중...").start();
+  await installSkills(cwd);
+  skillSpinner.succeed("Claude Code 스킬 설치 완료");
 
   console.log(chalk.bold.green("\n✅ TaskFlow 초기화가 완료되었습니다!\n"));
   console.log(chalk.gray("  다음 단계 (Claude Code에서):"));
