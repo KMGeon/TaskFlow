@@ -40,6 +40,7 @@ Use the following skill commands to run workflows:
 - `/refine` — Analyze impact of requirement changes
 - `/next` — Recommend next task to work on
 - `/task-status` — Project progress summary
+- `/auto` — Auto-implement tasks in a loop (use with `/ra /auto`)
 
 ## Workflows
 

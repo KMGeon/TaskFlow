@@ -91,6 +91,7 @@ That's it. From PRD to kanban board in 3 minutes.
 | Refine | `/refine` | Analyze impact of requirement changes |
 | Next Task | `/next` | Dependency/priority-based recommendation |
 | Status | `/task-status` | Project progress summary |
+| Auto | `/auto` | Auto-implement tasks in a loop (`/ra /auto`) |
 
 ---
 
