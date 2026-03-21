@@ -1249,7 +1249,7 @@ Expected: no errors
 - [ ] **Step 4: Manual test**
 
 ```bash
-npm run task -- status --no-ai
+pnpm task -- status --no-ai
 ```
 
 Expected: shows progress output (or "태스크가 없습니다" message if no tasks)
@@ -1384,6 +1384,7 @@ import { getRecommendation } from "@/features/taskflow/lib/advisor/ai-advisor";
 const hasFlags = opts.json || opts.all || opts.includeBlocked || opts.limit;
 
 if (!hasFlags) {
+  const spinner = ora("추천 생성 중...").start();
   try {
     const db = await AdvisorDb.open(getAdvisorDbPath(projectRoot));
     const context = await buildContext({ command: "next", projectRoot, db });
@@ -1391,9 +1392,11 @@ if (!hasFlags) {
     db.persistToDiskAsync();
     db.close();
 
+    spinner.stop();
     console.log(aiRecommendation);
     return;
   } catch {
+    spinner.stop();
     // AI failed — fall through to existing local recommend()
   }
 }
@@ -1674,7 +1677,7 @@ Expected: all pass
 - [ ] **Step 3: Manual smoke test — task status**
 
 ```bash
-npm run task -- status --no-ai
+pnpm task -- status --no-ai
 ```
 
 Expected: progress output or "no tasks" message
@@ -1682,7 +1685,7 @@ Expected: progress output or "no tasks" message
 - [ ] **Step 4: Manual smoke test — task advisor --stats**
 
 ```bash
-npm run task -- advisor --stats
+pnpm task -- advisor --stats
 ```
 
 Expected: DB stats output
