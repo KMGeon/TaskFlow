@@ -192,22 +192,3 @@ pnpm typecheck    # Type check
 pnpm lint         # Lint
 ```
 
----
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
----
-
-## License
-
-MIT
-
----
-
-<div align="center">
-
-**Stop managing tasks. Start shipping.**
-
-</div>
