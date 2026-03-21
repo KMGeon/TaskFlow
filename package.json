@@ -70,6 +70,7 @@
     "react-use": "^17",
     "remark-parse": "^11.0.0",
     "server-only": "0.0.1",
+    "sql.js": "^1.14.1",
     "ts-pattern": "^5",
     "unified": "^11.0.5",
     "zod": "^3",
