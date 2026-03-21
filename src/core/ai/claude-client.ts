@@ -35,7 +35,6 @@ export async function runPrdBrainstorm(
       cwd: options.projectRoot,
       maxTurns: 30,
       model: "claude-sonnet-4-6",
-      tools: [],
       permissionMode: "default",
     },
   });
@@ -186,7 +185,6 @@ export async function runTaskCreate(
       cwd: options.projectRoot,
       maxTurns: 50,
       model: "claude-sonnet-4-6",
-      tools: [],
       permissionMode: "default",
     },
   });
