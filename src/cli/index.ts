@@ -15,6 +15,7 @@ import { registerRefineCommand } from "./commands/refine.js";
 import { registerStatusCommand } from "./commands/status.js";
 import { registerAskCommand } from "./commands/ask.js";
 import { registerAdvisorCommand } from "./commands/advisor.js";
+import { registerCreateCommand } from "./commands/create.js";
 
 // CTRL+C 안전 종료
 process.on("SIGINT", () => {
@@ -30,6 +31,7 @@ program
   .version("0.1.0");
 
 registerInitCommand(program);
+registerCreateCommand(program);
 registerListCommand(program);
 registerBoardCommand(program);
 registerTreeCommand(program);
