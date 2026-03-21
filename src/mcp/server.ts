@@ -4,13 +4,11 @@ import { registerTaskTools } from "./tools/task.js";
 import { registerTaskStatusTools } from "./tools/task-status.js";
 import { registerPrdTools } from "./tools/prd.js";
 import { registerBrainstormTools } from "./tools/brainstorm.js";
-import { registerRefineTools } from "./tools/refine.js";
-import { registerParseTools } from "./tools/parse.js";
 
 export function createMcpServer(): McpServer {
   const server = new McpServer({
     name: "taskflow",
-    version: "0.1.0",
+    version: "0.2.0",
   });
 
   registerProjectTools(server);
@@ -18,8 +16,6 @@ export function createMcpServer(): McpServer {
   registerTaskStatusTools(server);
   registerPrdTools(server);
   registerBrainstormTools(server);
-  registerRefineTools(server);
-  registerParseTools(server);
 
   return server;
 }
