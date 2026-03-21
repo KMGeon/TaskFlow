@@ -7,12 +7,14 @@ import { registerFprdCommand } from "./commands/fprd.js";
 import { registerParsePrdCommand } from "./commands/parse-prd.js";
 import { registerListCommand } from "./commands/list.js";
 import { registerBoardCommand } from "./commands/board.js";
+import { registerTreeCommand } from "./commands/tree.js";
 import { registerShowCommand } from "./commands/show.js";
 import { registerSetStatusCommand } from "./commands/set-status.js";
 import { registerBrainstormCommand } from "./commands/brainstorm.js";
 import { registerExpandCommand } from "./commands/expand.js";
 import { registerNextCommand } from "./commands/next.js";
 import { registerRefineCommand } from "./commands/refine.js";
+import { registerStatusCommand } from "./commands/status.js";
 
 // CTRL+C 안전 종료
 process.on("SIGINT", () => {
@@ -32,11 +34,13 @@ registerFprdCommand(program);
 registerParsePrdCommand(program);
 registerListCommand(program);
 registerBoardCommand(program);
+registerTreeCommand(program);
 registerShowCommand(program);
 registerSetStatusCommand(program);
 registerBrainstormCommand(program);
 registerExpandCommand(program);
 registerNextCommand(program);
 registerRefineCommand(program);
+registerStatusCommand(program);
 
 program.parse();
