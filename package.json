@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "bin": {
-    "task": "./bin/task.mjs"
+    "task": "./bin/task.mjs",
+    "task-mcp": "./bin/task-mcp.mjs"
   },
   "scripts": {
     "task": "tsx src/cli/index.ts",
