@@ -1,31 +1,66 @@
+"use client";
+
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import { useState } from "react";
 import { KanbanColumn } from "./KanbanColumn";
-import type { TaskCardData, TaskStatus } from "./TaskCard";
-
-const mockTasks: TaskCardData[] = [
-  // Pending
-  { id: "TSK-001", title: "PRD 문서 파싱 모듈 구현", status: "pending", complexity: "high" },
-  { id: "TSK-002", title: "CLI init 명령어 스캐폴딩", status: "pending", complexity: "medium" },
-  { id: "TSK-003", title: "프로젝트 설정 스키마 정의", status: "pending", complexity: "low" },
-  { id: "TSK-004", title: "마크다운 렌더링 유틸리티", status: "pending", complexity: "low" },
-  // In Progress
-  { id: "TSK-005", title: "AI 태스크 분해 엔진 개발", status: "in-progress", complexity: "high" },
-  { id: "TSK-006", title: "칸반 보드 UI 목업", status: "in-progress", complexity: "medium" },
-  { id: "TSK-007", title: "Supabase 인증 연동", status: "in-progress", complexity: "medium" },
-  // Blocked
-  { id: "TSK-008", title: "의존성 그래프 시각화", status: "blocked", complexity: "high" },
-  { id: "TSK-009", title: "SSE 실시간 알림 연동", status: "blocked", complexity: "medium" },
-  { id: "TSK-010", title: "변경 영향도 분석 API", status: "blocked", complexity: "high" },
-  // Done
-  { id: "TSK-011", title: "디자인 시스템 및 테마 설정", status: "done", complexity: "medium" },
-  { id: "TSK-012", title: "프로젝트 초기 세팅", status: "done", complexity: "low" },
-  { id: "TSK-013", title: "Supabase 마이그레이션 작성", status: "done", complexity: "low" },
-  { id: "TSK-014", title: "라우팅 구조 설계", status: "done", complexity: "medium" },
-  { id: "TSK-015", title: "shadcn/ui 컴포넌트 추가", status: "done", complexity: "low" },
-];
-
-const columns: TaskStatus[] = ["pending", "in-progress", "blocked", "done"];
+import { TaskCard } from "./TaskCard";
+import { ProgressCard } from "./ProgressCard";
+import { KanbanSkeleton } from "./KanbanSkeleton";
+import { KanbanError } from "./KanbanError";
+import { useTasksQuery, useSetStatusMutation } from "../hooks/useTasksQuery";
+import { useTaskSse } from "../hooks/useTaskSse";
+import { groupByStatus, COLUMN_ORDER } from "../lib/kanban-utils";
+import type { Task, TaskStatus } from "@/features/taskflow/types";
+import { TASK_STATUSES } from "@/features/taskflow/types";
 
 export function KanbanBoard() {
+  const { data: tasks, isLoading, isError, error, refetch } = useTasksQuery();
+  const mutation = useSetStatusMutation();
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+  useTaskSse();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor),
+  );
+
+  if (isLoading) return <KanbanSkeleton />;
+  if (isError) return <KanbanError message={error?.message} onRetry={() => refetch()} />;
+
+  const allTasks = tasks ?? [];
+  const columns = groupByStatus(allTasks);
+
+  function handleDragStart(event: DragStartEvent) {
+    const task = event.active.data.current?.task as Task | undefined;
+    setActiveTask(task ?? null);
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    setActiveTask(null);
+
+    const { active, over } = event;
+    if (!over) return;
+
+    const taskId = String(active.id);
+    const newStatus = String(over.id) as TaskStatus;
+
+    if (!(TASK_STATUSES as readonly string[]).includes(newStatus)) return;
+
+    const task = allTasks.find((t) => t.id === taskId);
+    if (!task || task.status === newStatus) return;
+
+    mutation.mutate({ id: taskId, to: newStatus });
+  }
+
   return (
     <div className="flex h-full flex-col">
       {/* Board header */}
@@ -33,21 +68,38 @@ export function KanbanBoard() {
         <div>
           <h1 className="text-xl font-semibold text-foreground">칸반 보드</h1>
           <p className="mt-0.5 text-sm text-muted-foreground">
-            {mockTasks.length}개의 태스크
+            {allTasks.length}개의 태스크
           </p>
+        </div>
+        <div className="w-64">
+          <ProgressCard tasks={allTasks} />
         </div>
       </div>
 
       {/* Board columns */}
-      <div className="flex flex-1 gap-4 overflow-x-auto p-6">
-        {columns.map((status) => (
-          <KanbanColumn
-            key={status}
-            status={status}
-            tasks={mockTasks.filter((t) => t.status === status)}
-          />
-        ))}
-      </div>
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="flex flex-1 gap-4 overflow-x-auto p-6">
+          {COLUMN_ORDER.map((status) => (
+            <KanbanColumn
+              key={status}
+              status={status}
+              tasks={columns[status]}
+            />
+          ))}
+        </div>
+
+        <DragOverlay>
+          {activeTask ? (
+            <div className="w-[264px]">
+              <TaskCard task={activeTask} />
+            </div>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
     </div>
   );
 }

@@ -1,33 +1,26 @@
-import { describe, it, expect } from "vitest";
-import { buildPrdMarkdown } from "../generator.js";
-import type { PrdData } from "../../types.js";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { savePrd } from "../generator.js";
+import fs from "node:fs/promises";
+import path from "node:path";
+import os from "node:os";
 
-describe("buildPrdMarkdown", () => {
-  it("should generate markdown with all sections", () => {
-    const data: PrdData = {
-      projectName: "TestProject",
-      summary: "A test project",
-      target: "Developers",
-      pains: ["Pain 1"],
-      solutions: ["Solution 1"],
-      goals: ["Goal 1"],
-      scenarios: ["Scenario 1"],
-      mustFeatures: ["Feature 1"],
-      optFeatures: ["Optional 1"],
-      nonfunc: ["Performance"],
-      stack: ["TypeScript"],
-      scope: "MVP",
-      outScope: "None",
-      milestones: ["M1"],
-      risks: ["Risk 1"],
-    };
+describe("savePrd", () => {
+  let tmpDir: string;
 
-    const md = buildPrdMarkdown(data);
-    expect(md).toContain("# TestProject — PRD");
-    expect(md).toContain("A test project");
-    expect(md).toContain("Pain 1");
-    expect(md).toContain("Solution 1");
-    expect(md).toContain("Feature 1");
-    expect(md).toContain("TypeScript");
+  beforeEach(async () => {
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "gen-test-"));
+    await fs.mkdir(path.join(tmpDir, ".taskflow"), { recursive: true });
+  });
+
+  afterEach(async () => {
+    await fs.rm(tmpDir, { recursive: true, force: true });
+  });
+
+  it("should save PRD markdown to .taskflow/prd.md", async () => {
+    const markdown = "# Test PRD\n\nContent here";
+    const result = await savePrd(tmpDir, markdown);
+    expect(result).toContain("prd.md");
+    const content = await fs.readFile(result, "utf-8");
+    expect(content).toBe(markdown);
   });
 });

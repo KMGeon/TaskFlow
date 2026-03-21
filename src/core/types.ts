@@ -22,43 +22,6 @@ export interface PrdResult {
   };
 }
 
-export interface PrdData {
-  projectName: string;
-  summary: string;
-  target: string;
-  pains: string[];
-  solutions: string[];
-  goals: string[];
-  scenarios: string[];
-  mustFeatures: string[];
-  optFeatures: string[];
-  nonfunc: string[];
-  stack: string[];
-  scope: string;
-  outScope: string;
-  milestones: string[];
-  risks: string[];
-}
-
-// Brainstorm session types
-export interface BrainstormMessage {
-  role: "user" | "assistant";
-  content: string;
-}
-
-export interface BrainstormSession {
-  sessionId: string;
-  messages: BrainstormMessage[];
-  isComplete: boolean;
-}
-
-export interface BrainstormTurn {
-  session: BrainstormSession;
-  aiMessage: string;
-  isComplete: boolean;
-  prdMarkdown?: string;
-}
-
 // Feature PRD types
 export interface FeaturePrdResult {
   markdown: string;

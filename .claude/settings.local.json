@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npx vitest:*)",
+      "Bash(git rm:*)",
+      "Bash(grep -r \"ai-advisor\\\\|from.*advisor\" /Users/mugeon/IdeaProjects/TaskPilot/src --include=*.ts -l)",
+      "Bash(pnpm install:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}

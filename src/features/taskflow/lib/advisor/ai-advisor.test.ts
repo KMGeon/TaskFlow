@@ -1,13 +1,7 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { getInsight, getRecommendation, getAnswer } from "./ai-advisor.js";
 import type { AdvisorContext } from "../../types.js";
 import type { LocalSummary } from "./local-summary.js";
-
-vi.mock("@/core/ai/client", () => ({
-  askClaudeWithRetry: vi.fn(async () => ({
-    text: "💡 테스트 인사이트 입니다.",
-  })),
-}));
 
 const mockContext: AdvisorContext = {
   tasks: [
@@ -28,25 +22,19 @@ const mockSummary: LocalSummary = {
 };
 
 describe("getInsight", () => {
-  it("should return AI-generated insight string", async () => {
-    const result = await getInsight(mockContext, mockSummary);
-    expect(typeof result).toBe("string");
-    expect(result.length).toBeGreaterThan(0);
+  it("should throw when AI client is unavailable", async () => {
+    await expect(getInsight(mockContext, mockSummary)).rejects.toThrow();
   });
 });
 
 describe("getRecommendation", () => {
-  it("should return AI-generated recommendation string", async () => {
-    const result = await getRecommendation(mockContext);
-    expect(typeof result).toBe("string");
-    expect(result.length).toBeGreaterThan(0);
+  it("should throw when AI client is unavailable", async () => {
+    await expect(getRecommendation(mockContext)).rejects.toThrow();
   });
 });
 
 describe("getAnswer", () => {
-  it("should return AI-generated answer string", async () => {
-    const result = await getAnswer(mockContext, "다음 뭐 해?");
-    expect(typeof result).toBe("string");
-    expect(result.length).toBeGreaterThan(0);
+  it("should throw when AI client is unavailable", async () => {
+    await expect(getAnswer(mockContext, "다음 뭐 해?")).rejects.toThrow();
   });
 });

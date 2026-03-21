@@ -13,13 +13,11 @@ const logger: AppLogger = {
   debug: (...args) => console.debug(...args),
 };
 
-export const withAppContext = () => {
-  const config = getAppConfig();
-
-  return createMiddleware<AppEnv>(async (c, next) => {
+export const withAppContext = () =>
+  createMiddleware<AppEnv>(async (c, next) => {
+    const config = getAppConfig();
     c.set(contextKeys.logger, logger);
     c.set(contextKeys.config, config);
 
     await next();
   });
-};

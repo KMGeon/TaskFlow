@@ -14,8 +14,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TaskFlow",
-  description: "AI-powered task manager for developers",
+  title: "TaskPilot",
+  description: "AI-powered task management dashboard",
 };
 
 export default function RootLayout({
