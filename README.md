@@ -6,7 +6,6 @@
 
 **PRD to Done. In Minutes, Not Hours.**
 
-[![License](https://img.shields.io/badge/license-MIT-white?labelColor=black&style=flat-square)](LICENSE)
 
 </div>
 
