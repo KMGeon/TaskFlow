@@ -169,9 +169,10 @@ TRD를 기반으로 구현 가능한 단위의 태스크로 분해하세요:
 
 async function runSingleTurn(
   prompt: string,
-  options: { systemPrompt: string; cwd: string; continueSession?: boolean },
+  options: { systemPrompt: string; cwd: string; continueSession?: boolean; onFirstMessage?: () => void },
 ): Promise<{ text: string }> {
   let text = "";
+  let firstMessageFired = false;
   const conversation = query({
     prompt,
     options: {
@@ -185,6 +186,10 @@ async function runSingleTurn(
   });
 
   for await (const message of conversation) {
+    if (!firstMessageFired && message.type === "assistant") {
+      firstMessageFired = true;
+      options.onFirstMessage?.();
+    }
     if (message.type === "assistant") {
       const betaMessage = (message as Extract<SDKMessage, { type: "assistant" }>).message;
       if (betaMessage?.content) {
@@ -236,13 +241,12 @@ ${options.userSummary}
 
 이 요약을 바탕으로 추가 질문을 하며 요구사항을 구체화하고, TRD를 작성한 뒤, 태스크로 분해해주세요.${contextSection}`;
 
-  // 첫 턴: 초기 프롬프트 전송
+  // 첫 턴: 초기 프롬프트 전송 (onFirstMessage는 첫 응답 직전에 호출됨)
   const firstTurn = await runSingleTurn(initialPrompt, {
     systemPrompt: TASK_CREATE_SYSTEM_PROMPT,
     cwd: options.projectRoot,
+    onFirstMessage: options.onFirstMessage,
   });
-
-  options.onFirstMessage?.();
 
   let lastText = firstTurn.text;
 
