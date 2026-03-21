@@ -14,7 +14,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TaskPilot",
+  title: "TaskFlow",
   description: "AI-powered task management dashboard",
 };
 

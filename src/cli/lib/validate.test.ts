@@ -10,7 +10,7 @@ describe("validateRequired", () => {
   const validate = validateRequired("프로젝트명");
 
   it("값이 있으면 true를 반환해야 한다", () => {
-    expect(validate("TaskPilot")).toBe(true);
+    expect(validate("TaskFlow")).toBe(true);
   });
 
   it("빈 값이면 에러 메시지를 반환해야 한다", () => {

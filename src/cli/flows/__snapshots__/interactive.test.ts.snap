@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`buildMarkdown > 스냅샷: 대표 입력으로 생성된 마크다운이 일관되어야 한다 1`] = `
-"# TaskPilot — PRD
+"# TaskFlow — PRD
 
 ## 1. 제품 개요
 

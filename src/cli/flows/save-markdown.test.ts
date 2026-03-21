@@ -54,7 +54,7 @@ describe("slugify", () => {
   });
 
   it("대문자를 소문자로 변환해야 한다", () => {
-    expect(slugify("TaskPilot")).toBe("taskpilot");
+    expect(slugify("TaskFlow")).toBe("taskflow");
   });
 
   it("숫자를 유지해야 한다", () => {

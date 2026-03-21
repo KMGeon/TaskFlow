@@ -1,6 +1,6 @@
 <div align="center">
 
-# TaskPilot
+# TaskFlow
 
 ### AI-Powered Task Management for Developers Who Ship
 
@@ -14,13 +14,13 @@
 
 > **2 hours writing a PRD, 1 hour decomposing tasks, 30 minutes prioritizing.**
 >
-> Spend that time coding. TaskPilot handles the rest.
+> Spend that time coding. TaskFlow handles the rest.
 
 ---
 
-## What is TaskPilot?
+## What is TaskFlow?
 
-TaskPilot is an **AI task manager built on Claude Code skills**. From PRD creation to task decomposition, tracking, and change impact analysis — everything happens naturally inside Claude Code with skill commands like `/prd`, `/next`, and `/refine`.
+TaskFlow is an **AI task manager built on Claude Code skills**. From PRD creation to task decomposition, tracking, and change impact analysis — everything happens naturally inside Claude Code with skill commands like `/prd`, `/next`, and `/refine`.
 
 All data is stored as **local markdown files**. No database. No cloud dependency. Version control with Git.
 

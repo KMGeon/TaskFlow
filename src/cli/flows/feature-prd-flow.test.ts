@@ -57,7 +57,7 @@ beforeEach(() => {
 // ── 샘플 데이터 ──
 
 const sampleAnswers: FeatureAnswers = {
-  projectName: "TaskPilot",
+  projectName: "TaskFlow",
   featureName: "사용자 인증",
   goal: "이메일/비밀번호 기반 로그인 및 회원가입 기능 제공",
   stories: "사용자는 이메일로 회원가입할 수 있다, 사용자는 로그인할 수 있다",
@@ -90,7 +90,7 @@ describe("buildFeatureMarkdown", () => {
 
   it("프로젝트명을 표시해야 한다", () => {
     const md = buildFeatureMarkdown(sampleAnswers, "");
-    expect(md).toContain("프로젝트: TaskPilot");
+    expect(md).toContain("프로젝트: TaskFlow");
   });
 
   it("모든 섹션 헤딩을 포함해야 한다", () => {
@@ -206,13 +206,13 @@ describe("runFeaturePrdFlow", () => {
 
     expect(result.markdown).toContain("사용자 인증 — 기능 PRD");
     expect(result.markdown).toContain("AI 분석 결과");
-    expect(result.meta.projectName).toBe("TaskPilot");
+    expect(result.meta.projectName).toBe("TaskFlow");
     expect(result.meta.featureName).toBe("사용자 인증");
     expect(result.meta.mode).toBe("feature");
     expect(result.meta.codeAnalyzed).toBe(true);
     expect(mockSaveMarkdown).toHaveBeenCalledWith(
       expect.objectContaining({
-        projectName: "TaskPilot",
+        projectName: "TaskFlow",
         filename: expect.stringContaining("features/"),
       }),
     );
@@ -258,7 +258,7 @@ describe("runFeaturePrdFlow", () => {
     const firstCall = mockPrompt.mock.calls[0][0] as Array<Record<string, unknown>>;
     const validate = firstCall[0].validate as (v: string) => true | string;
     expect(validate("")).not.toBe(true);
-    expect(validate("TaskPilot")).toBe(true);
+    expect(validate("TaskFlow")).toBe(true);
 
     // featureName validate 확인
     const secondCall = mockPrompt.mock.calls[1][0] as Array<Record<string, unknown>>;

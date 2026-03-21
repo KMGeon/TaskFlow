@@ -58,7 +58,7 @@ describe("splitComma", () => {
 // ── 마크다운 빌더 테스트 ──
 
 const sampleAnswers: PrdAnswers = {
-  projectName: "TaskPilot",
+  projectName: "TaskFlow",
   summary: "AI 기반 태스크 관리 도구",
   target: "개발자 및 프로젝트 매니저",
   pains: "수동 태스크 관리, 진행 상황 파악 어려움",
@@ -78,7 +78,7 @@ const sampleAnswers: PrdAnswers = {
 describe("buildMarkdown", () => {
   it("프로젝트명을 제목으로 포함해야 한다", () => {
     const md = buildMarkdown(sampleAnswers);
-    expect(md).toContain("# TaskPilot — PRD");
+    expect(md).toContain("# TaskFlow — PRD");
   });
 
   it("모든 섹션 헤딩을 포함해야 한다", () => {
@@ -172,8 +172,8 @@ describe("runInteractivePrd", () => {
 
     const result = await runInteractivePrd();
 
-    expect(result.markdown).toContain("# TaskPilot — PRD");
-    expect(result.meta.projectName).toBe("TaskPilot");
+    expect(result.markdown).toContain("# TaskFlow — PRD");
+    expect(result.meta.projectName).toBe("TaskFlow");
     expect(result.meta.mode).toBe("interactive");
     expect(result.meta.generatedAt).toBeDefined();
   });
@@ -216,6 +216,6 @@ describe("runInteractivePrd", () => {
 
     expect(validate("")).not.toBe(true);
     expect(validate("   ")).not.toBe(true);
-    expect(validate("TaskPilot")).toBe(true);
+    expect(validate("TaskFlow")).toBe(true);
   });
 });
