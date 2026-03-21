@@ -167,46 +167,30 @@ TRD를 기반으로 구현 가능한 단위의 태스크로 분해하세요:
 - 태스크는 최소 3개, 최대 15개로 분해합니다.
 `;
 
-export async function runTaskCreate(
-  options: TaskCreateOptions,
-): Promise<TaskCreateResult | null> {
-  const contextSection = options.projectContext
-    ? `\n\n## 현재 프로젝트 컨텍스트\n\n${options.projectContext}`
-    : "";
-
-  const prompt = `새로운 기능을 만들려고 합니다. 사용자가 다음과 같이 요약했습니다:
-
----
-${options.userSummary}
----
-
-이 요약을 바탕으로 추가 질문을 하며 요구사항을 구체화하고, TRD를 작성한 뒤, 태스크로 분해해주세요.${contextSection}`;
-
-  let lastText = "";
-  let firstMessageFired = false;
-
+async function runSingleTurn(
+  prompt: string,
+  options: { systemPrompt: string; cwd: string; continueSession?: boolean },
+): Promise<{ text: string }> {
+  let text = "";
   const conversation = query({
     prompt,
     options: {
-      systemPrompt: TASK_CREATE_SYSTEM_PROMPT,
-      cwd: options.projectRoot,
-      maxTurns: 50,
+      systemPrompt: options.systemPrompt,
+      cwd: options.cwd,
+      maxTurns: 3,
       model: "claude-sonnet-4-6",
       permissionMode: "default",
+      continue: options.continueSession,
     },
   });
 
   for await (const message of conversation) {
-    if (!firstMessageFired && message.type === "assistant") {
-      firstMessageFired = true;
-      options.onFirstMessage?.();
-    }
     if (message.type === "assistant") {
       const betaMessage = (message as Extract<SDKMessage, { type: "assistant" }>).message;
       if (betaMessage?.content) {
         for (const block of betaMessage.content) {
           if (block.type === "text") {
-            lastText = block.text;
+            text += block.text;
             process.stdout.write(block.text);
           }
         }
@@ -220,13 +204,65 @@ ${options.userSummary}
           { subtype: "success" }
         >;
         if (successMsg.result) {
-          lastText = successMsg.result;
+          text = successMsg.result;
         }
       }
     }
   }
 
-  if (!lastText || !lastText.includes("[TASK_CREATE_COMPLETE]")) return null;
+  return { text };
+}
+
+async function promptUser(message: string): Promise<string> {
+  const readline = await import("node:readline/promises");
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const answer = await rl.question(message);
+  rl.close();
+  return answer;
+}
+
+export async function runTaskCreate(
+  options: TaskCreateOptions,
+): Promise<TaskCreateResult | null> {
+  const contextSection = options.projectContext
+    ? `\n\n## 현재 프로젝트 컨텍스트\n\n${options.projectContext}`
+    : "";
+
+  const initialPrompt = `새로운 기능을 만들려고 합니다. 사용자가 다음과 같이 요약했습니다:
+
+---
+${options.userSummary}
+---
+
+이 요약을 바탕으로 추가 질문을 하며 요구사항을 구체화하고, TRD를 작성한 뒤, 태스크로 분해해주세요.${contextSection}`;
+
+  // 첫 턴: 초기 프롬프트 전송
+  const firstTurn = await runSingleTurn(initialPrompt, {
+    systemPrompt: TASK_CREATE_SYSTEM_PROMPT,
+    cwd: options.projectRoot,
+  });
+
+  options.onFirstMessage?.();
+
+  let lastText = firstTurn.text;
+
+  // 멀티턴 루프: [TASK_CREATE_COMPLETE]가 나올 때까지 반복
+  while (!lastText.includes("[TASK_CREATE_COMPLETE]")) {
+    const userInput = await promptUser("\n> ");
+
+    if (!userInput.trim()) continue;
+    if (userInput.trim().toLowerCase() === "exit" || userInput.trim().toLowerCase() === "quit") {
+      return null;
+    }
+
+    const turn = await runSingleTurn(userInput, {
+      systemPrompt: TASK_CREATE_SYSTEM_PROMPT,
+      cwd: options.projectRoot,
+      continueSession: true,
+    });
+
+    lastText = turn.text;
+  }
 
   // Parse TRD
   const trdMatch = lastText.match(/---TRD_START---([\s\S]*?)---TRD_END---/);
