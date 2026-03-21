@@ -3,8 +3,6 @@
 import { Command } from "commander";
 import chalk from "chalk";
 import { registerInitCommand } from "./commands/init.js";
-import { registerFprdCommand } from "./commands/fprd.js";
-import { registerParsePrdCommand } from "./commands/parse-prd.js";
 import { registerListCommand } from "./commands/list.js";
 import { registerBoardCommand } from "./commands/board.js";
 import { registerTreeCommand } from "./commands/tree.js";
@@ -32,8 +30,6 @@ program
   .version("0.1.0");
 
 registerInitCommand(program);
-registerFprdCommand(program);
-registerParsePrdCommand(program);
 registerListCommand(program);
 registerBoardCommand(program);
 registerTreeCommand(program);
