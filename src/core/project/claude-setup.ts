@@ -1,10 +1,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { DOCS_NAMES } from "./docs-setup.js";
 
 const TASKFLOW_DIR = ".taskflow";
 const CLAUDE_MD = "CLAUDE.md";
 const MCP_JSON = ".mcp.json";
 const IMPORT_LINE = "@./.taskflow/CLAUDE.md";
+const DOCS_SECTION_MARKER = "<!-- docs-reference -->";
 
 export interface ClaudeMdContext {
   projectName: string;
@@ -133,6 +135,56 @@ export async function appendClaudeImport(projectRoot: string): Promise<void> {
     await fs.writeFile(filePath, content, "utf-8");
   } else {
     const content = `# Claude Code Instructions\n${importBlock}`;
+    await fs.writeFile(filePath, content, "utf-8");
+  }
+}
+
+export async function appendDocsReference(projectRoot: string): Promise<void> {
+  const filePath = path.join(projectRoot, CLAUDE_MD);
+
+  let existing = "";
+  try {
+    existing = await fs.readFile(filePath, "utf-8");
+  } catch {
+    // file does not exist
+  }
+
+  if (existing.includes(DOCS_SECTION_MARKER)) {
+    return;
+  }
+
+  const docsList = DOCS_NAMES.map((name) => `- ${name}.md: ./docs/${name}.md`).join("\n");
+
+  const docsBlock = `
+${DOCS_SECTION_MARKER}
+For every request:
+
+1. Always refer to the documentation files stored under \`/docs\`:
+<docs>
+${docsList}
+</docs>
+
+2. Use the relevant file(s) depending on the context of the request.
+3. Never ignore these files. Consider them for:
+    - Providing accurate information
+    - Ensuring consistency
+    - Following documented guidelines
+    - Making decisions or generating content
+`;
+
+  if (existing.trim()) {
+    // Insert docs reference at the top, after the first heading line
+    const lines = existing.split("\n");
+    const headingIndex = lines.findIndex((l) => l.startsWith("# "));
+    if (headingIndex >= 0) {
+      lines.splice(headingIndex + 1, 0, docsBlock);
+      await fs.writeFile(filePath, lines.join("\n"), "utf-8");
+    } else {
+      const content = docsBlock + "\n" + existing;
+      await fs.writeFile(filePath, content, "utf-8");
+    }
+  } else {
+    const content = `# Claude Code Instructions\n${docsBlock}`;
     await fs.writeFile(filePath, content, "utf-8");
   }
 }

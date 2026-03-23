@@ -7,8 +7,9 @@ import inquirer from "inquirer";
 import { withCliErrorBoundary } from "../lib/error-boundary.js";
 import { initProject } from "../../core/project/init.js";
 import { readConfig, writeConfig } from "../../core/project/config.js";
-import { generateClaudeMd, generateMcpJson, appendClaudeImport } from "../../core/project/claude-setup.js";
+import { generateClaudeMd, generateMcpJson, appendClaudeImport, appendDocsReference } from "../../core/project/claude-setup.js";
 import { installSkills } from "../../core/project/skill-setup.js";
+import { installDocs } from "../../core/project/docs-setup.js";
 import { SKILL_TEMPLATES } from "../../core/project/skill-templates.js";
 import { scanFiles, sampleFiles } from "../../core/prd/scanner.js";
 import { savePrd } from "../../core/prd/generator.js";
@@ -56,7 +57,16 @@ async function handleNewInit(cwd: string): Promise<void> {
   await appendClaudeImport(cwd);
   console.log(chalk.green("✔ 루트 CLAUDE.md에 TaskFlow import 추가 완료"));
 
-  // Step 5: Install skills + symlinks
+  // Step 5: Install docs
+  const docsSpinner = ora("개발 가이드라인 문서 생성 중...").start();
+  await installDocs(cwd);
+  docsSpinner.succeed("개발 가이드라인 문서 생성 완료 (docs/)");
+
+  // Step 5.1: Append docs reference to root CLAUDE.md
+  await appendDocsReference(cwd);
+  console.log(chalk.green("✔ 루트 CLAUDE.md에 docs 참조 추가 완료"));
+
+  // Step 6: Install skills + symlinks
   const skillSpinner = ora("Claude Code 스킬 설치 중...").start();
   await installSkills(cwd);
   skillSpinner.succeed("Claude Code 스킬 설치 완료");
@@ -119,6 +129,11 @@ async function handleNewInit(cwd: string): Promise<void> {
 
 async function handleReinit(cwd: string): Promise<void> {
   console.log(chalk.yellow("\n⚠ TaskFlow 프로젝트가 이미 초기화되어 있습니다.\n"));
+
+  // Re-install docs (create missing docs only)
+  const docsSpinner = ora("개발 가이드라인 문서 확인 중...").start();
+  await installDocs(cwd);
+  docsSpinner.succeed("개발 가이드라인 문서 확인 완료");
 
   // Re-install skills (update to latest templates)
   const skillSpinner = ora("스킬 업데이트 중...").start();
