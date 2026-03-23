@@ -8,9 +8,9 @@ import {
   listTasks,
   updateTask,
   ensureRepo,
-} from "@/features/taskflow/lib/repository";
-import { filterTasks, sortTasks } from "@/features/taskflow/lib/filter";
-import type { Task } from "@/features/taskflow/types";
+} from "../../../features/taskflow/lib/repository.js";
+import { filterTasks, sortTasks } from "../../../features/taskflow/lib/filter.js";
+import type { Task } from "../../../features/taskflow/types.js";
 
 let tmpDir: string;
 

@@ -48,6 +48,7 @@ yarn-error.log*
 .ruler/
 .mcp.json
 .claude/settings.local.json
+.taskflow/.tmp/
 
 # typescript
 *.tsbuildinfo

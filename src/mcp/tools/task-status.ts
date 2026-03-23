@@ -22,11 +22,14 @@ export function registerTaskStatusTools(server: McpServer): void {
   server.tool(
     "get_next_task",
     "의존성과 우선순위 기반으로 다음 작업할 태스크를 추천합니다",
-    { projectRoot: z.string().optional(), count: z.number().optional() },
-    async ({ projectRoot, count }) => {
+    { projectRoot: z.string().optional(), count: z.number().optional(), group: z.string().optional() },
+    async ({ projectRoot, count, group }) => {
       try {
         const root = resolveProjectRoot(projectRoot);
-        const tasks = await listTasks(root);
+        let tasks = await listTasks(root);
+        if (group) {
+          tasks = tasks.filter((t) => t.group === group);
+        }
         const recommendations = recommend(tasks, { limit: count ?? 3 });
         return { content: [{ type: "text" as const, text: JSON.stringify(recommendations, null, 2) }] };
       } catch (error) {

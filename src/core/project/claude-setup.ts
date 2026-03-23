@@ -139,6 +139,40 @@ export async function appendClaudeImport(projectRoot: string): Promise<void> {
   }
 }
 
+const DEFAULT_PLUGINS: Record<string, boolean> = {
+  "superpowers@claude-plugins-official": true,
+  "ralph-loop@claude-plugins-official": true,
+};
+
+/**
+ * .claude/settings.local.json에 enabledPlugins를 추가한다.
+ * 이미 설정된 플러그인은 덮어쓰지 않는다.
+ */
+export async function setupPlugins(projectRoot: string): Promise<void> {
+  const settingsPath = path.join(projectRoot, ".claude", "settings.local.json");
+
+  let existing: Record<string, unknown> = {};
+  try {
+    const raw = await fs.readFile(settingsPath, "utf-8");
+    existing = JSON.parse(raw);
+  } catch {
+    // file does not exist or invalid JSON
+  }
+
+  const enabledPlugins = (existing.enabledPlugins as Record<string, boolean>) ?? {};
+
+  for (const [plugin, enabled] of Object.entries(DEFAULT_PLUGINS)) {
+    if (!(plugin in enabledPlugins)) {
+      enabledPlugins[plugin] = enabled;
+    }
+  }
+
+  const merged = { ...existing, enabledPlugins };
+
+  await fs.mkdir(path.dirname(settingsPath), { recursive: true });
+  await fs.writeFile(settingsPath, JSON.stringify(merged, null, 2) + "\n", "utf-8");
+}
+
 export async function appendDocsReference(projectRoot: string): Promise<void> {
   const filePath = path.join(projectRoot, CLAUDE_MD);
 

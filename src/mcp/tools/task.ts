@@ -38,11 +38,11 @@ export function registerTaskTools(server: McpServer): void {
   server.tool(
     "create_task",
     "새 태스크를 생성합니다",
-    { projectRoot: z.string().optional(), title: z.string(), description: z.string().optional(), priority: z.number().optional(), status: z.string().optional(), parentId: z.string().optional(), dependencies: z.array(z.string()).optional() },
-    async ({ projectRoot, title, description, priority, status, parentId, dependencies }) => {
+    { projectRoot: z.string().optional(), title: z.string(), description: z.string().optional(), priority: z.number().optional(), status: z.string().optional(), parentId: z.string().optional(), dependencies: z.array(z.string()).optional(), group: z.string().optional() },
+    async ({ projectRoot, title, description, priority, status, parentId, dependencies, group }) => {
       try {
         const root = resolveProjectRoot(projectRoot);
-        const task = await createTask(root, { title, description, priority, status: status as any, parentId, dependencies });
+        const task = await createTask(root, { title, description, priority, status: status as any, parentId, dependencies, group });
         return { content: [{ type: "text" as const, text: JSON.stringify(task, null, 2) }] };
       } catch (error) {
         return { content: [{ type: "text" as const, text: `오류: ${error instanceof Error ? error.message : String(error)}` }], isError: true };

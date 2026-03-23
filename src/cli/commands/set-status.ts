@@ -1,9 +1,9 @@
 import type { Command } from "commander";
 import chalk from "chalk";
-import { readTask, updateTask } from "@/features/taskflow/lib/repository";
+import { readTask, updateTask } from "../../features/taskflow/lib/repository.js";
 import { withCliErrorBoundary } from "../lib/error-boundary.js";
-import type { TaskStatus } from "@/features/taskflow/types";
-import { TASK_STATUSES } from "@/features/taskflow/types";
+import type { TaskStatus } from "../../features/taskflow/types.js";
+import { TASK_STATUSES } from "../../features/taskflow/types.js";
 
 function validateStatus(value: string): TaskStatus {
   if (!(TASK_STATUSES as readonly string[]).includes(value)) {

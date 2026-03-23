@@ -101,6 +101,7 @@ export async function createTask(
     priority: input.priority ?? 0,
     dependencies: input.dependencies ?? [],
     parentId: input.parentId,
+    group: input.group,
     createdAt: now,
     updatedAt: now,
     description: input.description ?? "",

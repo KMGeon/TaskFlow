@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import Table from "cli-table3"; // eslint-disable-line
 import boxen from "boxen";
-import type { Task, TaskStatus } from "@/features/taskflow/types";
+import type { Task, TaskStatus } from "../../features/taskflow/types.js";
 
 // ── Status Config ──────────────────────────────────────────────
 

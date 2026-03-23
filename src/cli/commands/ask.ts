@@ -2,11 +2,11 @@ import type { Command } from "commander";
 import chalk from "chalk";
 import ora from "ora";
 import { withCliErrorBoundary } from "../lib/error-boundary.js";
-import { ensureRepo } from "@/features/taskflow/lib/repository";
-import { getAdvisorDbPath } from "@/features/taskflow/constants";
-import { AdvisorDb } from "@/features/taskflow/lib/advisor/db";
-import { buildContext } from "@/features/taskflow/lib/advisor/context-builder";
-import { getAnswer } from "@/features/taskflow/lib/advisor/ai-advisor";
+import { ensureRepo } from "../../features/taskflow/lib/repository.js";
+import { getAdvisorDbPath } from "../../features/taskflow/constants.js";
+import { AdvisorDb } from "../../features/taskflow/lib/advisor/db.js";
+import { buildContext } from "../../features/taskflow/lib/advisor/context-builder.js";
+import { getAnswer } from "../../features/taskflow/lib/advisor/ai-advisor.js";
 
 export function registerAskCommand(program: Command) {
   program

@@ -1,6 +1,6 @@
 import type { Command } from "commander";
 import chalk from "chalk";
-import { readTask } from "@/features/taskflow/lib/repository";
+import { readTask } from "../../features/taskflow/lib/repository.js";
 import { formatTaskDetail } from "../lib/formatter.js";
 import { withCliErrorBoundary } from "../lib/error-boundary.js";
 

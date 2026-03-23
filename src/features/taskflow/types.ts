@@ -9,6 +9,7 @@ export interface Task {
   priority: number;
   dependencies: string[];
   parentId?: string;
+  group?: string;
   createdAt: string;
   updatedAt: string;
   description: string;

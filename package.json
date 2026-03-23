@@ -1,12 +1,16 @@
 {
-  "name": "task-pilot",
-  "version": "0.1.3",
-  "private": true,
+  "name": "@kmgeon/taskflow",
+  "version": "0.1.4",
   "type": "module",
   "bin": {
     "task": "./bin/task.mjs",
     "task-mcp": "./bin/task-mcp.mjs"
   },
+  "files": [
+    "bin/",
+    "src/",
+    "docs/"
+  ],
   "scripts": {
     "task": "tsx src/cli/index.ts",
     "dev": "next dev --turbopack -p 4000",
@@ -30,6 +34,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "^4",
+    "@kmgeon/taskflow": "^0.1.3",
     "@modelcontextprotocol/sdk": "^1.27.1",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-avatar": "^1.1.2",
@@ -73,8 +78,9 @@
     "server-only": "0.0.1",
     "sql.js": "^1.14.1",
     "ts-pattern": "^5",
+    "tsx": "^4.20.6",
     "unified": "^11.0.5",
-    "zod": "^3",
+    "zod": "^4",
     "zustand": "^4"
   },
   "devDependencies": {
@@ -103,7 +109,6 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss": "^4.1.13",
     "tailwindcss-animate": "^1.0.7",
-    "tsx": "^4.20.6",
     "typescript": "^5",
     "vitest": "^3.2.4"
   }

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { truncate, formatTaskTable, formatTaskDetail } from "../formatter";
-import type { Task } from "@/features/taskflow/types";
+import type { Task } from "../../../features/taskflow/types.js";
 
 const now = new Date().toISOString();
 

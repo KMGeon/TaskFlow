@@ -7,7 +7,7 @@ import inquirer from "inquirer";
 import { withCliErrorBoundary } from "../lib/error-boundary.js";
 import { initProject } from "../../core/project/init.js";
 import { readConfig, writeConfig } from "../../core/project/config.js";
-import { generateClaudeMd, generateMcpJson, appendClaudeImport, appendDocsReference } from "../../core/project/claude-setup.js";
+import { generateClaudeMd, generateMcpJson, appendClaudeImport, appendDocsReference, setupPlugins } from "../../core/project/claude-setup.js";
 import { installSkills } from "../../core/project/skill-setup.js";
 import { installDocs } from "../../core/project/docs-setup.js";
 import { SKILL_TEMPLATES } from "../../core/project/skill-templates.js";
@@ -70,6 +70,11 @@ async function handleNewInit(cwd: string): Promise<void> {
   const skillSpinner = ora("Claude Code 스킬 설치 중...").start();
   await installSkills(cwd);
   skillSpinner.succeed("Claude Code 스킬 설치 완료");
+
+  // Step 7: Setup plugins (superpowers, ralph-loop)
+  const pluginSpinner = ora("Claude Code 플러그인 설정 중...").start();
+  await setupPlugins(cwd);
+  pluginSpinner.succeed("Claude Code 플러그인 설정 완료 (superpowers, ralph-loop)");
 
   // Step 6: PRD generation
   const { generatePrd } = await inquirer.prompt<{ generatePrd: boolean }>([

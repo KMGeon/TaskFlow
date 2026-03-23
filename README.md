@@ -1,293 +1,294 @@
 <div align="center">
 
+<img src="https://img.shields.io/npm/v/@kmgeon/taskflow?style=flat-square&color=blue" alt="npm version" />
+<img src="https://img.shields.io/npm/l/@kmgeon/taskflow?style=flat-square" alt="license" />
+
 # TaskFlow
 
-### AI-Powered Task Management for Developers Who Ship
+### Two commands. Idea to code.
 
-**PRD to Done. In Minutes, Not Hours.**
+**Document-driven vibe coding.**
 
+<br />
+
+```
+/t-create    →    task run    →    done.
+ (define)         (execute)
+```
+
+<br />
+
+[Philosophy](#philosophy) · [Concepts](#concepts) · [Quick Start](#quick-start) · [How It Works](#how-it-works) · [CLI](#cli-reference) · [Architecture](#architecture)
 
 </div>
 
----
+<br />
 
-> **2 hours writing a PRD, 1 hour decomposing tasks, 30 minutes prioritizing.**
->
-> Spend that time coding. TaskFlow handles the rest.
+## Philosophy
 
----
+> **Write docs, not code.**
 
-## What is TaskFlow?
+You describe what you want. AI brainstorms with you, writes the spec, and implements everything.
+Your job is to **think and approve** — not to type boilerplate.
 
-TaskFlow is an **AI task manager built on Claude Code skills**. From PRD creation to task decomposition, tracking, and change impact analysis — everything happens naturally inside Claude Code with skill commands like `/prd`, `/next`, and `/refine`.
-
-All data is stored as **local markdown files**. No database. No cloud dependency. Version control with Git.
+| Principle | What it means |
+|:--|:--|
+| **Document-first** | Every feature starts as a TRD. No code until the spec is approved. Decisions live in markdown, not in your head. |
+| **Automated execution** | Once approved, AI decomposes the spec into tasks and implements them one by one. No ticket management. No priority juggling. |
+| **File-based, Git-native** | No database. No cloud. Everything is markdown in `.taskflow/`, versioned with Git. |
 
 ```
-/prd → /trd → /parse-prd → /next → implement → /task-status
-  ↑                                                ↓
-  └──────── /refine (when requirements change) ←───┘
+idea → TRD (markdown) → tasks (markdown) → working code
+         you write          AI generates       AI implements
 ```
 
 ---
 
-## Highlights
+## Concepts
 
-|       | Feature | Description |
-| :---: | :--- | :--- |
-| :brain: | **AI PRD Brainstorm** | Generate PRD interactively with `/prd` — just talk to Claude |
-| :zap: | **Smart Task Decomposition** | `/parse-prd` auto-decomposes PRD into tasks with dependencies |
-| :dart: | **Intelligent Next** | `/next` recommends the best next task based on dependencies & priority |
-| :arrows_counterclockwise: | **Real-time Sync** | CLI changes instantly reflected in the web dashboard (SSE) |
-| :card_file_box: | **File-based Storage** | Markdown files in `.taskflow/` — Git-friendly, no DB needed |
-| :robot: | **Skill + MCP** | 7 skill commands + 14 MCP tools, fully integrated with Claude Code |
-| :mag: | **Impact Analysis** | `/refine` auto-detects affected tasks when requirements change |
-| :bar_chart: | **Kanban Dashboard** | Visual task management with drag-and-drop kanban board |
+Four building blocks. Understanding these makes everything click.
+
+### PRD — Product Requirements Document
+
+> **What** you're building, for **whom**, and **why**.
+
+The big picture. Captures product vision, target users, feature list, success metrics.
+Created with `/prd`, stored in `.taskflow/prd.md`.
+
+### TRD — Task Requirements Document
+
+> **How** to build a specific feature.
+
+Zooms into one feature. Defines the technical approach — architecture, data models, APIs, risks.
+
+**PRD says** "we need authentication."
+**TRD says** "Supabase Auth, JWT, refresh tokens in httpOnly cookies, middleware on /api/*."
+
+Created with `/t-create` (includes brainstorming). Stored as `.taskflow/trd-{feature}.md`.
+
+**One TRD = one feature = one `task run` unit.**
+
+### Task — Implementation Unit
+
+A single piece of work completable in under 4 hours. Auto-generated when `task run` decomposes a TRD.
+
+```yaml
+---
+id: '003'
+title: Implement auth middleware
+status: InProgress
+priority: 9
+group: auth system
+dependencies: ['001', '002']
+---
+Create middleware that validates JWT tokens on /api/* routes...
+```
+
+### Decompose — TRD to Tasks
+
+```
+TRD: Auth System
+ ├── task-001: Set up auth client           (priority: 9)
+ ├── task-002: Create login/signup routes   (priority: 9, depends: 001)
+ ├── task-003: Implement auth middleware    (priority: 9, depends: 001, 002)
+ ├── task-004: Add refresh token rotation   (priority: 7, depends: 003)
+ └── task-005: Write integration tests      (priority: 8, depends: 003)
+```
+
+Happens automatically. AI reads the TRD, creates tasks, implements them sequentially.
 
 ---
 
 ## Quick Start
 
 ```bash
-# Clone & Install
-git clone https://github.com/KMGeon/TaskFlow.git
-cd TaskFlow
-pnpm install
-
-# Initialize a project
-pnpm task init
+npm install @kmgeon/taskflow
+task init
 ```
 
-### 3 Minutes to First Task
+That's it. Skills, plugins, MCP server — all auto-configured.
+
+Then:
 
 ```bash
-# 1. Initialize project (includes interactive PRD generation)
-pnpm task init
-
-# 2. Use skills in Claude Code
-/parse-prd        # PRD → task decomposition
-/next             # Next task recommendation
-/task-status      # Progress summary
-
-# 3. Open web dashboard
-pnpm task board
+/t-create     # In Claude Code — define your feature
+task run      # In terminal — AI implements everything
 ```
-
-That's it. From PRD to kanban board in 3 minutes.
-
----
-
-## Claude Code Skills
-
-7 skills auto-installed on `task init`:
-
-| Skill | Command | Description |
-| :--- | :--- | :--- |
-| PRD Creation | `/prd` | Interactive PRD writing with AI |
-| TRD Creation | `/trd` | Technical implementation plan from PRD |
-| PRD Parsing | `/parse-prd` | Decompose PRD into individual tasks |
-| Brainstorm | `/brainstorm` | Break tasks into subtasks |
-| Refine | `/refine` | Analyze impact of requirement changes |
-| Next Task | `/next` | Dependency/priority-based recommendation |
-| Status | `/task-status` | Project progress summary |
-| Auto | `/auto` | Auto-implement tasks in a loop (`/ra /auto`) |
-
----
-
-## CLI Commands
-
-| Command | Description |
-| :--- | :--- |
-| `task init` | Initialize project + Claude Code setup + skill install + PRD generation |
-| `task list` | List tasks (with filter/sort) |
-| `task show <id>` | View task details |
-| `task set-status <id> <status>` | Change task status |
-| `task board` | Open web dashboard (localhost:4000) |
-| `task tree` | Display task dependency tree |
-| `task next` | Recommend next task |
 
 ---
 
 ## How It Works
 
-### 1. Initialize & Generate PRD
-
-```bash
-$ pnpm task init
-
-🚀 Initializing TaskFlow project...
-✔ Project structure created
-✔ Claude Code integration configured (.mcp.json)
-✔ CLAUDE.md generated
-✔ Claude Code skills installed
-
-? Generate PRD now? (Y/n) Y
-
-💬 Starting PRD brainstorm...
-🤖 What's the project name?
-> ...
-```
-
-### 2. Decompose PRD to Tasks (in Claude Code)
+### `/t-create` — Define what to build
 
 ```
-> /parse-prd
+❯ /t-create
 
-📄 Analyzing PRD...
-🔍 Requirements extracted: 12 features found
-🧩 Task decomposition: 28 tasks created
-🔗 Dependency mapping: 15 relations set
-✅ Saved to .taskflow/tasks/
+? What do you want to build?
+> User authentication with JWT
+
+? Who uses this feature?
+  A. End users (login/logout)
+  B. Admin users (user management)
+  C. Both
+> C
+
+💡 Three approaches:
+
+  A. (Recommended) Supabase Auth native
+     + Zero custom code for core auth
+     - Limited customization
+
+  B. Custom JWT + Supabase as DB only
+     + Full control
+     - More code to maintain
+
+? Which approach: A
+
+📝 Writing TRD...
+   ✔ Overview — approved
+   ✔ User Scenarios — approved
+   ✔ Technical Design — approved
+   ✔ Success Criteria — approved
+
+✅ TRD saved: .taskflow/trd-auth-system.md
 ```
 
-### 3. Get Next Task
+AI asks questions one at a time. Proposes approaches with trade-offs. Writes the spec section by section. You approve each part.
+
+### `task run` — Build it automatically
 
 ```
-> /next
+❯ task run
 
-🎯 Recommended Task (Score: 0.92)
-┌──────────────────────────────────┐
-│ task-003: Implement Auth API      │
-│ Priority: High | Deps: 0 blocked │
-│ Reason: No blockers + high prio  │
-└──────────────────────────────────┘
+📋 TRD list:
+  1) auth system       (trd-auth-system.md)
+  2) notification      (trd-notification.md)
+
+? Select: 1
+
+🚀 Ralph Loop started. All tasks will be implemented automatically.
 ```
 
-### 4. Refine on Changes
+What happens next:
+1. AI reads your TRD
+2. Decomposes into implementation tasks
+3. Implements each task — writes code, runs tests
+4. Marks done, picks the next one
+5. Repeats until complete
+
+### Track progress
 
 ```
-> /refine
+❯ task list
 
-📋 Changed requirements:
-  - "OAuth 2.0 → SAML authentication"
+📋 Feature progress:
 
-⚠️  Affected tasks: 4
-  - task-003: Auth API middleware (direct)
-  - task-007: User session management (indirect)
-```
-
----
-
-## Usage Recipes
-
-TaskFlow skills can be combined for powerful workflows. Here are the most effective patterns.
-
-### Full Autopilot: PRD to Implementation
-
-Go from zero to working code — fully autonomous.
-
-```bash
-# Step 1: Generate PRD interactively
-/prd
-
-# Step 2: Create implementation plan
-/trd
-
-# Step 3: Decompose into tasks
-/parse-prd
-
-# Step 4: Let Claude implement everything automatically
-/ra /auto
-```
-
-Claude will pick up tasks one by one (by priority & dependency order), implement each one, mark it done, and move to the next — until all tasks are complete.
-
-### Manual Control: One Task at a Time
-
-For when you want to review each step.
-
-```bash
-# See what to work on next
-/next
-
-# Claude implements the selected task
-# ... (review the changes)
-
-# Check overall progress
-/task-status
-```
-
-### Requirement Changes Mid-Project
-
-Requirements changed? No need to start over.
-
-```bash
-# Analyze what's affected
-/refine
-
-# Then continue with updated tasks
-/ra /auto
-```
-
-### Break Down a Complex Task
-
-When a single task is too big:
-
-```bash
-# Decompose into smaller subtasks
-/brainstorm
-
-# Then auto-implement the subtasks
-/ra /auto
-```
-
-### Combine with Ralph Loop
-
-[Ralph Loop](https://github.com/anthropics/claude-code) (`/ra`) repeats any skill or prompt on a loop. Combine it with TaskFlow skills:
-
-```bash
-# Auto-implement all tasks
-/ra /auto
-
-# Auto-implement with a custom instruction
-/ra "get the next task, implement it, run tests, and mark done"
-
-# Run with max iterations
-/ra /auto --max-iterations 20
-```
-
-### Recommended Workflow
-
-```
-┌─────────────┐    ┌─────────────┐    ┌──────────────┐
-│   /prd      │───▶│   /trd      │───▶│  /parse-prd  │
-│ (Define)    │    │ (Plan)      │    │ (Decompose)  │
-└─────────────┘    └─────────────┘    └──────┬───────┘
-                                             │
-                   ┌─────────────┐    ┌──────▼───────┐
-                   │  /refine    │◀───│  /ra /auto   │
-                   │ (if needed) │───▶│ (Implement)  │
-                   └─────────────┘    └──────┬───────┘
-                                             │
-                                      ┌──────▼───────┐
-                                      │ /task-status  │
-                                      │ (Review)      │
-                                      └──────────────┘
+  ██████░░░░  auth system       60%  3/5 · 1 in progress
+  ░░░░░░░░░░  notification       0%  0/3
+  ██████████  onboarding       100%  done
 ```
 
 ---
 
-## Roadmap
+## CLI Reference
 
-- [x] CLI core commands (init, list, show, set-status, tree)
-- [x] AI-powered PRD brainstorm
-- [x] Web Kanban dashboard with real-time sync
-- [x] MCP server integration (14 pure data tools)
-- [x] Claude Code skill-based workflow (7 skills)
-- [x] Impact analysis for requirement changes
-- [ ] Dependency graph visualization
-- [ ] Timeline / Gantt chart view
-- [ ] Task auto-execution loop
+**Core**
+
+| Command | Description |
+|:--|:--|
+| `task init` | Initialize project — skills, plugins, MCP |
+| `task run` | Select TRD → decompose → auto-implement |
+
+**Monitor**
+
+| Command | Description |
+|:--|:--|
+| `task list` | Feature progress by group |
+| `task list --detail [name]` | Individual tasks (optionally filtered) |
+| `task board` | Kanban board by group |
+| `task tree` | Dependency tree by group |
+
+**Manage**
+
+| Command | Description |
+|:--|:--|
+| `task show <id>` | Task details |
+| `task set-status <id> <status>` | Change task status |
+| `task ask` | Ask AI about your project |
 
 ---
 
-## Development
+## Skills
 
-```bash
-pnpm dev          # Dev server (web dashboard)
-pnpm test         # Run tests
-pnpm test:e2e     # E2E tests
-pnpm typecheck    # Type check
-pnpm lint         # Lint
+Slash commands in Claude Code. Auto-installed by `task init`.
+
+| Skill | What it does |
+|:--|:--|
+| `/t-create` | Brainstorm → TRD spec |
+| `/prd` | Product requirements document |
+| `/trd` | Technical implementation plan |
+
+Customizable. Edit `.taskflow/.claude/commands/*.md` directly.
+
+---
+
+## Architecture
+
+### What `task init` creates
+
+```
+.taskflow/
+├── config.json                    # settings
+├── trd-auth-system.md             # TRD specs (one per feature)
+├── tasks/
+│   ├── task-001.md                # tasks (auto-generated)
+│   └── ...
+└── .claude/commands/
+    ├── t-create.md                # skill source files
+    ├── prd.md
+    └── trd.md
+
+.claude/
+├── commands/                      # symlinks → .taskflow/.claude/commands/
+└── settings.local.json            # plugins: superpowers, ralph-loop
+
+.mcp.json                          # MCP server config
+CLAUDE.md                          # project instructions
+docs/                              # dev guidelines
 ```
 
+### Data flow
+
+```
+/t-create
+    │ writes
+    ▼
+.taskflow/trd-*.md
+    │ task run reads
+    ▼
+Ralph Loop
+    │ creates tasks via MCP
+    ▼
+.taskflow/tasks/task-*.md
+    │ implements code, updates status
+    ▼
+Working code ✅
+```
+
+### Plugins
+
+TaskFlow auto-configures these Claude Code plugins (project-scoped):
+
+- **superpowers** — brainstorming, debugging, TDD, code review
+- **ralph-loop** — autonomous implementation loop
+
+---
+
+<div align="center">
+
+**Define. Decompose. Deliver.**
+
+`npm install @kmgeon/taskflow`
+
+</div>
